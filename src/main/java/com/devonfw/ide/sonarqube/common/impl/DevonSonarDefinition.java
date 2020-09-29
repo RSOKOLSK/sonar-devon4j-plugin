@@ -5,6 +5,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
+import com.devonfw.ide.sonarqube.common.impl.check.component.DevonArchitectureJsonFileCheck;
+import com.devonfw.ide.sonarqube.common.impl.json.DevonJSONLanguage;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.rule.RuleStatus;
 import org.sonar.api.rules.RuleType;
@@ -15,6 +18,7 @@ import org.sonar.plugins.java.Java;
 import org.sonar.plugins.java.api.JavaCheck;
 
 import com.google.common.io.Resources;
+import org.sonar.squidbridge.annotations.AnnotationBasedRulesDefinition;
 
 /**
  * {@link RulesDefinition} for this plugin.
@@ -35,6 +39,24 @@ public class DevonSonarDefinition implements RulesDefinition {
       addRule(repository, check);
     }
 
+    repository.done();
+
+    // TODO: Added Json repository
+    createJsonRepository(context);
+  }
+
+  private void createJsonRepository(Context context) {
+
+    NewRepository repository = context.createRepository(DevonJSONLanguage.KEY, DevonJSONLanguage.KEY)
+        .setName("devonfw Json Rules");
+
+    new AnnotationBasedRulesDefinition(repository, DevonJSONLanguage.KEY).addRuleClasses(false, ImmutableList.of(
+        DevonArchitectureJsonFileCheck.class));
+    for (final NewRule rule : repository.rules()) {
+      final String metadataKey = rule.key();
+      rule.setInternalKey(metadataKey);
+      rule.setHtmlDescription("<p>TEST DESCRIPTION</p>");
+    }
     repository.done();
   }
 

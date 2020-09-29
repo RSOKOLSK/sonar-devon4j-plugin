@@ -1,5 +1,8 @@
 package com.devonfw.ide.sonarqube.common.impl;
 
+import com.devonfw.ide.sonarqube.common.impl.json.DevonJSONLanguage;
+import com.devonfw.ide.sonarqube.common.impl.json.JSONProfile;
+import com.devonfw.ide.sonarqube.common.impl.json.JSONSquidSensor;
 import org.sonar.api.Plugin;
 import org.sonar.api.PropertyType;
 import org.sonar.api.config.PropertyDefinition;
@@ -20,7 +23,9 @@ public class SonarDevon4jPlugin implements Plugin {
   @Override
   public void define(Context context) {
 
-    context.addExtensions(DevonSonarDefinition.class, DevonSonarRegistrar.class, DevonfwJavaProfile.class);
+    // TODO: Added Json classes to extensions
+    context.addExtensions(DevonSonarDefinition.class, DevonSonarRegistrar.class, DevonfwJavaProfile.class,
+        JSONSquidSensor.class, JSONProfile.class, DevonJSONLanguage.class);
     context.addExtension(PropertyDefinition.builder(CONFIG_KEY).name("Config JSON")
         .description("Configuration of business architecture").category("devonfw").subCategory("")
         .type(PropertyType.TEXT)
